@@ -1,0 +1,362 @@
+//Casey Beach
+//cs321
+//Progegct 2
+/* miniParser0.jj: A simple Parser*/
+
+options{ 
+FORCE_LA_CHECK = true; 
+LOOKAHEAD = 5;
+}
+
+PARSER_BEGIN(miniParser0)
+package parser0;
+//import ast.*;
+
+
+public class miniParser0{}
+
+PARSER_END(miniParser0)
+
+SKIP: { " " | "\t" | "\n" | "\r" }
+
+SPECIAL_TOKEN: { <COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")> }
+SPECIAL_TOKEN: { <ML_COMMENT: "/*" (~["*","/"])* "*" ("*" | (~["*", "/"])* ~["*"] "*")*  "/"> }
+
+TOKEN:
+{ <BOOLEAN: "boolean" >
+| <CLASS: "class" >
+| <ELSE:"else" >
+| <EXTENDS: "extends" >
+| <FALSE:"false" >
+| <IF: "if" >
+| <INT: "int" >
+| <LENGTH: "length" > 
+| <MAIN: "main" >
+| <NEW: "new" >
+| <PUBLIC: "public" >
+| <RETURN: "return" >
+| <STATIC: "static" > 
+| <THIS: "this" >
+| <TRUE: "true" >
+| <VOID: "void" >
+| <WHILE: "while" >
+| <STRING: "String" >
+| <SYSTEM_OUT_PRINTLN: "System.out.println" >
+
+| <STRING_LITERAL: "\"" (~["\""])* "\"" >
+	{ 
+		if (matchedToken.image.length() > 257)
+		throw new TokenMgrError("Lexical error at line "
+		+ matchedToken.beginLine + ", column "
+		+ matchedToken.beginColumn
+		+ ". String length over 255", 0);
+	}
+| <#DIGIT: ["0"-"9"]>
+| <#LETTER: ["A"-"Z"] | ["a"-"z"]>
+| <ID: <LETTER> (<LETTER> | <DIGIT>)*>
+	{ 
+		if (matchedToken.image.length() > 255)
+		throw new TokenMgrError("Lexical error at line "
+		+ matchedToken.beginLine + ", column "
+		+ matchedToken.beginColumn
+		+ ". Id length over 255", 0);
+	}
+
+| <NUM: (<DIGIT>)+>
+	{
+		try
+		{
+			//if (Integer.parseInt(matchedToken.toString()) > Integer.MAX_VALUE)
+			Integer.parseInt(matchedToken.toString());
+		}
+		catch( Exception e )
+		{
+			throw new TokenMgrError("Lexical error at line "
+			+ matchedToken.beginLine + ", column "
+			+ matchedToken.beginColumn
+			+ ". Integer over limit", 0);
+		}
+	}
+| <REAL: ((<DIGIT>)* "." (<DIGIT>)+) | ((<DIGIT>)+ "." (<DIGIT>)*)>
+	
+| <ASSIGN: "=" >
+| <PLUS: "+" >
+| <MINUS: "-" >
+| <MULT: "*" >
+| <DIV: "/" >
+| <AND: "&&" >
+| <OR: "||" >
+| <NOT: "!" >
+| <EQL: "==" >
+| <NOT_EQL: "!=" >
+| <LESS_THAN: "<" >
+| <GREATER_OR_EQL: "<=" >
+| <GRETER_THAN: ">" >
+| <GRETER_OR_EQL: ">=" >
+| <DELIMITER: ";" > 
+| <COMMA: "," >
+| <PERIOD: "." >
+| <LPAREN: "(" >
+| <RPAREN: ")" >
+| <L_SQUARE_BRACKET: "[" >
+| <R_SQUARE_BRACKET: "]" >
+| <L_CURLY_BRACKET: "{" >
+| <R_CURLY_BRACKET: "}" >
+}
+
+
+
+
+
+void Program(): {}
+{ 
+	ClassDecl() (ClassDecl())*
+}
+
+
+void ClassDecl(): {}
+{
+	"class" <ID> [ "extends" <ID> ] "{" ( VarDecl() )* ( MethodDecl() )* "}"
+}
+
+void MethodDecl(): {}
+{	
+	  "public" MethodDeclTail() 
+}
+
+void MethodDeclTail(): {}
+{
+	  Type() <ID> "(" [LOOKAHEAD(2) Formals() ] ")" "{" (LOOKAHEAD(2) VarDecl())* (LOOKAHEAD(2)Statement() )* "}"
+	| "void" <ID> "(" [LOOKAHEAD(2) Formals() ] ")" "{" (LOOKAHEAD(2) VarDecl())* (LOOKAHEAD(2)Statement() )* "}"
+	| "static" "void" "main" "(" "String" "[" "]" <ID> ")" "{" (LOOKAHEAD(2) VarDecl())* (LOOKAHEAD(2) Statement())* "}"
+}
+
+void Formals(): {}
+{
+
+	Type() <ID> (LOOKAHEAD(2) ","  Type() <ID> )*
+}
+
+void VarDecl(): {}
+{
+	  Type() <ID> [ "=" FullExpr()] ";"
+
+}
+void Type(): {}
+{
+	  LOOKAHEAD(3) ElmType() ["[" "]"]
+}
+
+void ElmType(): {}
+{
+	"boolean" | "int" | <ID>
+}
+void Statement(): {}
+{
+	  "{"  (Statement())* "}"
+	| Lvalue() StatementLvalueTail()
+	| "if" "(" Expr() ")" Statement() [LOOKAHEAD(2) "else" Statement() ]
+	| "while" "(" Expr() ")" Statement()
+	| "System.out.println" "(" [Expr() | <STRING_LITERAL>] ")" ";"
+	| "return" [ Expr() ] ";"
+}
+
+
+void StatementLvalueTail(): {}
+{
+	  "=" FullExpr() ";"
+	| "(" [ Args() ] ")" ";"
+
+}
+
+void Args(): {}
+{
+	Expr() ( "," Expr() )*
+}
+
+void FullExpr(): {}
+{
+	  "new" FullExprNewTail()
+	| Expr()
+}
+
+void FullExprNewTail(): {}
+{
+	  <ID> "(" [ Args() ] ")"
+	| ElmType() "[" <NUM> "]"
+}
+
+void Expr(): {}
+{
+	AndExpr() OrTail()
+}
+
+void OrTail(): {}
+{
+	["||" AndExpr() OrTail()]
+
+}
+
+void AndExpr():{}
+{
+	RelExpr() AndTail()
+}
+
+void AndTail():{}
+{
+	["&&" RelExpr() AndTail()]
+}
+
+void RelExpr():{}
+{
+	ArithExpr() [RelOp() ArithExpr()]
+}
+
+void ArithExpr():{}
+{
+	Term() ArithTail()
+
+}
+
+void ArithTail():{}
+{
+	[("+" | "-") Term() ArithTail()]
+
+}
+
+void Term():{}
+{
+	Factor() TermTail()
+}
+
+void TermTail():{}
+{
+	[("*" | "/") Factor() TermTail()]
+}
+
+void Factor (): {}
+{
+	("-" | "!") Factor()
+	| Lvalue() ["." "length" "(" ")" | "(" [Args()] ")"]
+	| "(" Expr() ")"
+	| Literal()
+}
+
+void Lvalue(): {}
+{
+	["this" "."] <ID> ("[" Expr() "]" | "." <ID>)*
+}
+
+void Literal():{}
+{
+	<NUM> | "true" | "false"
+}
+
+void RelOp():{}
+{
+	"==" | "!=" | "<" | "<=" | ">" | ">="
+}
+
+/*
+void Expr(): {}
+{
+	  "(" Expr() ")" [Expr()]
+	| Lvalue() ExprLvalueTail()
+	| Neg() Expr()
+	| LOOKAHEAD(3) OrExpr() (Expr())*
+}
+
+void OrExpr(): {} 
+{
+	AndExpr() (OrExprP())*
+}
+void OrExprP(): {} 
+{
+	Or() AndExpr() (OrExprP())*
+}
+void AndExpr(): {} 
+{
+	CompExpr() [AndExprP()]
+}
+void AndExprP(): {} 
+{
+	And() CompExpr() (AndExprP())*
+}
+void CompExpr(): {} 
+{
+	AddExpr() [CompExprP()]
+}
+void CompExprP(): {} 
+{
+	Comp() AddExpr() (CompExprP())* 
+}
+void AddExpr(): {} 
+{
+	MultExpr() [AddExprP()]
+}
+void AddExprP(): {} 
+{
+	Add() MultExpr() (AddExprP())*
+}
+void MultExpr(): {} 
+{
+	Literal() [MultExprP()]
+	| Lvalue() [MultExprP()]
+}
+void MultExprP(): {} 
+{
+	Mult() (Literal() | Lvalue())  (MultExprP())*
+}
+
+void ExprLvalueTail(): {}
+{
+	  "(" [ Args() ] ")"
+	| "." "length" "(" ")"
+
+}
+void Lvalue(): {}
+{
+	[ "this" "." ] <ID> [ Deref() ]
+}
+
+void Deref(): {}
+{
+	"[" Expr() "]" | "." <ID>
+}
+
+void Literal():{}
+{
+	<NUM> | "true" | "false"
+}
+
+void Neg(): {}
+{
+	"-" | "!"
+}
+
+void Mult(): {}
+{
+	"*" | "/"
+}
+
+void Add(): {}
+{
+	"+" | "-"
+}
+
+void Comp(): {}
+{
+	"==" | "!=" | "<" | ">" | "<=" | ">="
+}
+
+void And(): {}
+{
+	"&&"
+}
+
+void Or(): {}
+{
+	"||"
+}
+*/
+

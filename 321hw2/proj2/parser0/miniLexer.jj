@@ -1,0 +1,101 @@
+//Casey Beach
+//cs321
+//project 1
+
+//package lexer;
+//import java.io.*;
+
+/* miniLexer.jj: A simple lexer */
+PARSER_BEGIN(miniLexer)
+
+package lexer;
+public class miniLexer{}
+
+PARSER_END(miniLexer)
+
+SKIP: { " " | "\t" | "\n" | "\r" }
+
+SPECIAL_TOKEN: { <COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")> }
+SPECIAL_TOKEN: { <ML_COMMENT: "/*" (~["*","/"])* "*" ("*" | (~["*", "/"])* ~["*"] "*")*  "/"> }
+
+TOKEN:
+{ <BOOLEAN: "boolean" >
+| <CLASS: "class" >
+| <ELSE:"else" >
+| <EXTENDS: "extends" >
+| <FALSE:"false" >
+| <IF: "if" >
+| <INT: "int" >
+| <LENGTH: "length" > 
+| <MAIN: "main" >
+| <NEW: "new" >
+| <PUBLIC: "public" >
+| <RETURN: "return" >
+| <STATIC: "static" > 
+| <THIS: "this" >
+| <TRUE: "true" >
+| <VOID: "void" >
+| <WHILE: "while" >
+| <STRING: "String" >
+| <SYSTEM_OUT_PRINTLN: "System.out.println" >
+
+| <STRING_LITERAL: "\"" (~["\""])* "\"" >
+	{ 
+		if (matchedToken.image.length() > 257)
+		throw new TokenMgrError("Lexical error at line "
+		+ matchedToken.beginLine + ", column "
+		+ matchedToken.beginColumn
+		+ ". String length over 255", 0);
+	}
+| <#DIGIT: ["0"-"9"]>
+| <#LETTER: ["A"-"Z"] | ["a"-"z"]>
+| <ID: <LETTER> (<LETTER> | <DIGIT>)*>
+	{ 
+		if (matchedToken.image.length() > 255)
+		throw new TokenMgrError("Lexical error at line "
+		+ matchedToken.beginLine + ", column "
+		+ matchedToken.beginColumn
+		+ ". Id length over 255", 0);
+	}
+
+| <NUM: (<DIGIT>)+>
+	{
+		try
+		{
+			//if (Integer.parseInt(matchedToken.toString()) > Integer.MAX_VALUE)
+			Integer.parseInt(matchedToken.toString());
+		}
+		catch( Exception e )
+		{
+			throw new TokenMgrError("Lexical error at line "
+			+ matchedToken.beginLine + ", column "
+			+ matchedToken.beginColumn
+			+ ". Integer over limit", 0);
+		}
+	}
+| <REAL: ((<DIGIT>)* "." (<DIGIT>)+) | ((<DIGIT>)+ "." (<DIGIT>)*)>
+	
+| <ASSIGN: "=" >
+| <PLUS: "+" >
+| <MINUS: "-" >
+| <MULT: "*" >
+| <DIV: "/" >
+| <AND: "&&" >
+| <OR: "||" >
+| <NOT: "!" >
+| <EQL: "==" >
+| <NOT_EQL: "!=" >
+| <LESS_THAN: "<" >
+| <GREATER_OR_EQL: "<=" >
+| <GRETER_THAN: ">" >
+| <GRETER_OR_EQL: ">=" >
+| <DELIMITER: ";" > 
+| <COMMA: "," >
+| <PERIOD: "." >
+| <LPAREN: "(" >
+| <RPAREN: ")" >
+| <L_SQUARE_BRACKET: "[" >
+| <R_SQUARE_BRACKET: "]" >
+| <L_CURLY_BRACKET: "{" >
+| <R_CURLY_BRACKET: "}" >
+}

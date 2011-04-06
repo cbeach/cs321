@@ -1,0 +1,11 @@
+(Program (ClassDeclList
+ (ClassDecl (Id A) (NullExp) 
+ (VarDeclList (VarDecl (IntType) (Id foo) (NullExp) ) ) 
+ (MethodDeclList
+ (MethodDecl (IntType) (Id foo) (FormalList (Formal (IntType) (Id i) ) ) (VarDeclList ) (StmtList 
+ (Return (Id i) ) ) ) ) ) (ClassDecl (Id test) (NullExp) 
+ (VarDeclList ) 
+ (MethodDeclList
+ (MethodDecl (NullType) (Id main) (FormalList ) (VarDeclList (VarDecl (ObjType (Id A) ) (Id x) (NewObj (Id A) (ExpList ) ) ) ) (StmtList 
+ (Assign (Member (Id x) (Id foo) ) (Call (Id x) (Id foo) (ExpList (Int 1) ) ) ) 
+ (Print (Member (Id x) (Id foo) ) ) ) ) ) ) ) )

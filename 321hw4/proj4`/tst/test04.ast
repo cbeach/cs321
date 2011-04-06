@@ -1,0 +1,10 @@
+(Program (ClassDeclList
+ (ClassDecl (Id Body) (NullExp) 
+ (VarDeclList (VarDecl (IntType) (Id i) (NullExp) ) ) 
+ (MethodDeclList
+ ) ) (ClassDecl (Id test) (NullExp) 
+ (VarDeclList ) 
+ (MethodDeclList
+ (MethodDecl (NullType) (Id main) (FormalList ) (VarDeclList (VarDecl (ObjType (Id Body) ) (Id b) (NewObj (Id Body) (ExpList ) ) ) (VarDecl (IntType) (Id i) (Int 2) ) ) (StmtList 
+ (Assign (Member (Id b) (Id i) ) (Int 3) ) 
+ (Print (Binop + (Id i) (Member (Id b) (Id i) ) ) ) ) ) ) ) ) )

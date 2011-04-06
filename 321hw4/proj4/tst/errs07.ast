@@ -1,0 +1,10 @@
+(Program (ClassDeclList
+ (ClassDecl (Id symErr) (NullExp) 
+ (VarDeclList ) 
+ (MethodDeclList
+ (MethodDecl (IntType) (Id foo) (FormalList (Formal (IntType) (Id i) ) (Formal (IntType) (Id i) ) ) (VarDeclList (VarDecl (IntType) (Id j) (Int 1) ) ) (StmtList 
+ (Return (Id i) ) ) ) (MethodDecl (NullType) (Id main) (FormalList ) (VarDeclList (VarDecl (BoolType) (Id b) (NullExp) ) (VarDecl (IntType) (Id i) (NullExp) ) ) (StmtList 
+ (Assign (Id b) (True) ) 
+ (Assign (Id i) (Call (This) (Id foo) (ExpList (Int 1) (Int 2) ) ) ) 
+ (Print (Id b) ) 
+ (Print (Id i) ) ) ) ) ) ) )

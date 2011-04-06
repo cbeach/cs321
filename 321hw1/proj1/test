@@ -1,0 +1,603 @@
+tst/testl01:
+1,54c1,54
+< Code Token-image
+< ----------------
+< [7] boolean
+< [8] class
+< [9] else
+< [10] extends
+< [11] false
+< [12] if
+< [13] int
+< [14] length
+< [15] main
+< [16] new
+< [17] public
+< [18] return
+< [19] static
+< [24] String
+< [25] System.out.println
+< [20] this
+< [21] true
+< [22] void
+< [23] while
+< [49] (
+< [50] )
+< [51] [
+< [52] ]
+< [53] {
+< [54] }
+< [47] ,
+< [46] ;
+< [48] .
+< [32] =
+< [33] +
+< [34] -
+< [35] *
+< [36] /
+< [37] &&
+< [38] ||
+< [39] !
+< [40] ==
+< [41] !=
+< [42] <
+< [43] <=
+< [44] >
+< [45] >=
+< [30] 0000011
+< [30] 1234567890
+< [26] "..."
+< [29] a
+< [29] a1
+< [29] Boolean
+< [29] class1
+< [29] extend
+< [0] 
+< Lexical analysis successful, total 51 tokens
+---
+> Code Token-image
+> ----------------
+> [8] boolean
+> [9] class
+> [10] else
+> [11] extends
+> [12] false
+> [13] if
+> [14] int
+> [15] length
+> [16] main
+> [17] new
+> [18] public
+> [19] return
+> [20] static
+> [21] String
+> [22] System.out.println
+> [23] this
+> [24] true
+> [25] void
+> [26] while
+> [27] (
+> [28] )
+> [29] [
+> [30] ]
+> [31] {
+> [32] }
+> [33] ,
+> [34] ;
+> [35] .
+> [36] =
+> [37] +
+> [38] -
+> [39] *
+> [40] /
+> [41] &&
+> [42] ||
+> [43] !
+> [44] ==
+> [45] !=
+> [46] <
+> [47] <=
+> [48] >
+> [49] >=
+> [50] 0000011
+> [50] 1234567890
+> [51] "..."
+> [52] a
+> [52] a1
+> [52] Boolean
+> [52] class1
+> [52] extend
+> [0] 
+> Lexical analysis successful, total 51 tokens
+tst/testl02:
+1,10c1,8
+< Code Token-image
+< ----------------
+< [36] /
+< [35] *
+< [29] Multi
+< [34] -
+< [29] line
+< [29] comments
+< [35] *
+< [39] !
+---
+> Code Token-image
+> ----------------
+> [52] The
+> [52] end
+> [39] *
+> [40] /
+> [0] 
+> Lexical analysis successful, total 5 tokens
+1,4d0
+< Exception in thread "main" lexer.TokenMgrError: Lexical error at line 3, column 5.  Encountered: "@" (64), after : ""
+< 	at lexer.miniLexerTokenManager.getNextToken(miniLexerTokenManager.java:1169)
+< 	at lexer.miniLexer.getNextToken(miniLexer.java:134)
+< 	at lexer.TestLexer.main(TestLexer.java:16)
+tst/testl03:
+1,175c1,175
+< Code Token-image
+< ----------------
+< [29] package
+< [29] lexer
+< [46] ;
+< [29] import
+< [29] java
+< [48] .
+< [29] io
+< [48] .
+< [35] *
+< [46] ;
+< [17] public
+< [8] class
+< [29] TestLexer
+< [53] {
+< [17] public
+< [19] static
+< [22] void
+< [15] main
+< [49] (
+< [24] String
+< [51] [
+< [52] ]
+< [29] args
+< [50] )
+< [53] {
+< [29] try
+< [53] {
+< [12] if
+< [49] (
+< [29] args
+< [48] .
+< [14] length
+< [40] ==
+< [30] 1
+< [50] )
+< [53] {
+< [29] FileInputStream
+< [29] stream
+< [32] =
+< [16] new
+< [29] FileInputStream
+< [49] (
+< [29] args
+< [51] [
+< [30] 0
+< [52] ]
+< [50] )
+< [46] ;
+< [29] miniLexer
+< [29] lexer
+< [32] =
+< [16] new
+< [29] miniLexer
+< [49] (
+< [29] stream
+< [50] )
+< [46] ;
+< [13] int
+< [29] cnt
+< [32] =
+< [30] 0
+< [46] ;
+< [29] Token
+< [29] t
+< [46] ;
+< [25] System.out.println
+< [49] (
+< [26] "Code Token-image"
+< [50] )
+< [46] ;
+< [25] System.out.println
+< [49] (
+< [26] "----------------"
+< [50] )
+< [46] ;
+< [23] while
+< [49] (
+< [49] (
+< [29] t
+< [32] =
+< [29] lexer
+< [48] .
+< [29] getNextToken
+< [49] (
+< [50] )
+< [50] )
+< [41] !=
+< [29] null
+< [50] )
+< [53] {
+< [29] cnt
+< [33] +
+< [33] +
+< [46] ;
+< [25] System.out.println
+< [49] (
+< [26] "["
+< [33] +
+< [29] t
+< [48] .
+< [29] kind
+< [33] +
+< [26] "] "
+< [33] +
+< [29] t
+< [48] .
+< [29] toString
+< [49] (
+< [50] )
+< [50] )
+< [46] ;
+< [12] if
+< [49] (
+< [29] t
+< [48] .
+< [29] kind
+< [40] ==
+< [30] 0
+< [50] )
+< [29] break
+< [46] ;
+< [54] }
+< [25] System.out.println
+< [49] (
+< [26] "Lexical analysis successful, total "
+< [33] +
+< [29] cnt
+< [33] +
+< [26] " tokens"
+< [50] )
+< [46] ;
+< [29] stream
+< [48] .
+< [29] close
+< [49] (
+< [50] )
+< [46] ;
+< [54] }
+< [9] else
+< [53] {
+< [29] throw
+< [16] new
+< [29] Exception
+< [49] (
+< [26] "You must provide a parameter of one file name."
+< [50] )
+< [46] ;
+< [54] }
+< [54] }
+< [29] catch
+< [49] (
+< [29] Exception
+< [29] e
+< [50] )
+< [53] {
+< [29] System
+< [48] .
+< [29] err
+< [48] .
+< [29] println
+< [49] (
+< [29] e
+< [48] .
+< [29] toString
+< [49] (
+< [50] )
+< [50] )
+< [46] ;
+< [54] }
+< [54] }
+< [54] }
+< [0] 
+< Lexical analysis successful, total 172 tokens
+---
+> Code Token-image
+> ----------------
+> [52] package
+> [52] lexer
+> [34] ;
+> [52] import
+> [52] java
+> [35] .
+> [52] io
+> [35] .
+> [39] *
+> [34] ;
+> [18] public
+> [9] class
+> [52] TestLexer
+> [31] {
+> [18] public
+> [20] static
+> [25] void
+> [16] main
+> [27] (
+> [21] String
+> [29] [
+> [30] ]
+> [52] args
+> [28] )
+> [31] {
+> [52] try
+> [31] {
+> [13] if
+> [27] (
+> [52] args
+> [35] .
+> [15] length
+> [44] ==
+> [50] 1
+> [28] )
+> [31] {
+> [52] FileInputStream
+> [52] stream
+> [36] =
+> [17] new
+> [52] FileInputStream
+> [27] (
+> [52] args
+> [29] [
+> [50] 0
+> [30] ]
+> [28] )
+> [34] ;
+> [52] miniLexer
+> [52] lexer
+> [36] =
+> [17] new
+> [52] miniLexer
+> [27] (
+> [52] stream
+> [28] )
+> [34] ;
+> [14] int
+> [52] cnt
+> [36] =
+> [50] 0
+> [34] ;
+> [52] Token
+> [52] t
+> [34] ;
+> [22] System.out.println
+> [27] (
+> [51] "Code Token-image"
+> [28] )
+> [34] ;
+> [22] System.out.println
+> [27] (
+> [51] "----------------"
+> [28] )
+> [34] ;
+> [26] while
+> [27] (
+> [27] (
+> [52] t
+> [36] =
+> [52] lexer
+> [35] .
+> [52] getNextToken
+> [27] (
+> [28] )
+> [28] )
+> [45] !=
+> [52] null
+> [28] )
+> [31] {
+> [52] cnt
+> [37] +
+> [37] +
+> [34] ;
+> [22] System.out.println
+> [27] (
+> [51] "["
+> [37] +
+> [52] t
+> [35] .
+> [52] kind
+> [37] +
+> [51] "] "
+> [37] +
+> [52] t
+> [35] .
+> [52] toString
+> [27] (
+> [28] )
+> [28] )
+> [34] ;
+> [13] if
+> [27] (
+> [52] t
+> [35] .
+> [52] kind
+> [44] ==
+> [50] 0
+> [28] )
+> [52] break
+> [34] ;
+> [32] }
+> [22] System.out.println
+> [27] (
+> [51] "Lexical analysis successful, total "
+> [37] +
+> [52] cnt
+> [37] +
+> [51] " tokens"
+> [28] )
+> [34] ;
+> [52] stream
+> [35] .
+> [52] close
+> [27] (
+> [28] )
+> [34] ;
+> [32] }
+> [10] else
+> [31] {
+> [52] throw
+> [17] new
+> [52] Exception
+> [27] (
+> [51] "You must provide a parameter of one file name."
+> [28] )
+> [34] ;
+> [32] }
+> [32] }
+> [52] catch
+> [27] (
+> [52] Exception
+> [52] e
+> [28] )
+> [31] {
+> [52] System
+> [35] .
+> [52] err
+> [35] .
+> [52] println
+> [27] (
+> [52] e
+> [35] .
+> [52] toString
+> [27] (
+> [28] )
+> [28] )
+> [34] ;
+> [32] }
+> [32] }
+> [32] }
+> [0] 
+> Lexical analysis successful, total 172 tokens
+tst/testl04:
+1,3c1,3
+< Code Token-image
+< ----------------
+< [26] "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234"
+---
+> Code Token-image
+> ----------------
+> [51] "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234"
+1,5c1
+< Exception in thread "main" lexer.TokenMgrError: Lexical error at line 5, column 1. String length over 255
+< 	at lexer.miniLexerTokenManager.TokenLexicalActions(miniLexerTokenManager.java:1180)
+< 	at lexer.miniLexerTokenManager.getNextToken(miniLexerTokenManager.java:1131)
+< 	at lexer.miniLexer.getNextToken(miniLexer.java:134)
+< 	at lexer.TestLexer.main(TestLexer.java:16)
+---
+> java.lang.RuntimeException: Lexical error at line 5, column 1.  String length over 255
+tst/testl05:
+1,3c1,3
+< Code Token-image
+< ----------------
+< [29] AbCdEf
+---
+> Code Token-image
+> ----------------
+> [52] AbCdEf
+1,5c1
+< Exception in thread "main" lexer.TokenMgrError: Lexical error at line 5, column 1. Id length over 255
+< 	at lexer.miniLexerTokenManager.TokenLexicalActions(miniLexerTokenManager.java:1188)
+< 	at lexer.miniLexerTokenManager.getNextToken(miniLexerTokenManager.java:1131)
+< 	at lexer.miniLexer.getNextToken(miniLexer.java:134)
+< 	at lexer.TestLexer.main(TestLexer.java:16)
+---
+> java.lang.RuntimeException: Lexical error at line 5, column 1.  Id length over 255
+tst/testl06:
+1,3c1,3
+< Code Token-image
+< ----------------
+< [30] 2147483647
+---
+> Code Token-image
+> ----------------
+> [50] 2147483647
+1,5c1
+< Exception in thread "main" lexer.TokenMgrError: Lexical error at line 5, column 1. Integer over limit
+< 	at lexer.miniLexerTokenManager.TokenLexicalActions(miniLexerTokenManager.java:1202)
+< 	at lexer.miniLexerTokenManager.getNextToken(miniLexerTokenManager.java:1131)
+< 	at lexer.miniLexer.getNextToken(miniLexer.java:134)
+< 	at lexer.TestLexer.main(TestLexer.java:16)
+---
+> java.lang.RuntimeException: Lexical error at line 5, column 1.  Integer value over 2^31-1
+tst/testl07:
+1,3c1,3
+< Code Token-image
+< ----------------
+< [35] *
+---
+> Code Token-image
+> ----------------
+> [39] *
+1,4c1,4
+< Exception in thread "main" lexer.TokenMgrError: Lexical error at line 3, column 3.  Encountered: "#" (35), after : ""
+< 	at lexer.miniLexerTokenManager.getNextToken(miniLexerTokenManager.java:1169)
+< 	at lexer.miniLexer.getNextToken(miniLexer.java:134)
+< 	at lexer.TestLexer.main(TestLexer.java:16)
+---
+> Exception in thread "main" lexer.TokenMgrError: Lexical error at line 3, column 3.  Encountered: "#" (35), after : ""
+> 	at lexer.miniLexerTokenManager.getNextToken(miniLexerTokenManager.java:1099)
+> 	at lexer.miniLexer.getNextToken(miniLexer.java:134)
+> 	at lexer.TestLexer.main(TestLexer.java:16)
+tst/testl08:
+1,20c1,20
+< Code Token-image
+< ----------------
+< [36] /
+< [35] *
+< [29] This
+< [29] comment
+< [35] *
+< [48] .
+< [48] .
+< [48] .
+< [29] continues
+< [29] here
+< [47] ,
+< [29] but
+< [29] is
+< [29] missing
+< [29] the
+< [29] end
+< [0] 
+< Lexical analysis successful, total 17 tokens
+---
+> Code Token-image
+> ----------------
+> [40] /
+> [39] *
+> [52] This
+> [52] comment
+> [39] *
+> [35] .
+> [35] .
+> [35] .
+> [52] continues
+> [52] here
+> [33] ,
+> [52] but
+> [52] is
+> [52] missing
+> [52] the
+> [52] end
+> [0] 
+> Lexical analysis successful, total 17 tokens

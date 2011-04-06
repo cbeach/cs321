@@ -1,0 +1,1 @@
+typechk.TypeException: Operands in arith op must be int: int+boolean

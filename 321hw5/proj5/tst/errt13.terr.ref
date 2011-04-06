@@ -1,0 +1,1 @@
+typechk.TypeException: Argument to Print must be an int or boolean or a String: int[]

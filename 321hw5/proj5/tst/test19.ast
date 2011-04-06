@@ -1,0 +1,13 @@
+(Program (ClassDeclList
+ (ClassDecl (Id test) (NullExp) 
+ (VarDeclList ) 
+ (MethodDeclList
+ (MethodDecl (NullType) (Id main) (FormalList ) (VarDeclList (VarDecl (ObjType (Id A) ) (Id a) (NewObj (Id A) (ExpList ) ) ) ) (StmtList 
+ (Print (Call (Id a) (Id go) (ExpList ) ) ) ) ) ) ) (ClassDecl (Id A) (NullExp) 
+ (VarDeclList (VarDecl (BoolType) (Id b) (NullExp) ) (VarDecl (IntType) (Id i) (NullExp) ) ) 
+ (MethodDeclList
+ (MethodDecl (IntType) (Id go) (FormalList ) (VarDeclList (VarDecl (ArrayType (IntType) ) (Id a) (NewArray (IntType) (Int 4) ) ) ) (StmtList 
+ (Assign (Id b) (Binop || (Binop || (Relop < (Int 1) (Int 2) ) (Binop && (Relop > (Int 3) (Int 4) ) (Relop == (Int 5) (Binop + (Int 6) (Binop * (Int 7) (Int 8) ) ) ) ) ) (Not (True) ) ) ) 
+ (Assign (Id i) (Binop + (Binop + (Binop - (Int 8) (Int 7) ) (Int 6) ) (Binop / (Binop * (Int 5) (ArrayLen (Id a) ) ) (Int 2) ) ) ) 
+ (Print (Id b) ) 
+ (Return (Id i) ) ) ) ) ) ) )

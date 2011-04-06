@@ -1,0 +1,5 @@
+Symbol Table:
+Class typeErr (pid=null):
+ <method> typeErr.main (rtype=void, paramCnt=0, localCnt=0):
+ <method> typeErr.m (rtype=boolean, paramCnt=0, localCnt=0):
+

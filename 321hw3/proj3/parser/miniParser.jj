@@ -1,0 +1,511 @@
+//Casey Beach
+//cs321
+//Progegct 2
+/* miniParser.jj: A simple Parser*/
+PARSER_BEGIN(miniParser)
+
+package parser;
+import ast.*;
+import java.lang.*;
+
+public class miniParser{}
+
+PARSER_END(miniParser)
+
+SKIP: { " " | "\t" | "\n" | "\r" }
+
+SPECIAL_TOKEN: { <COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")> }
+SPECIAL_TOKEN: { <ML_COMMENT: "/*" (~["*","/"])* "*" ("*" | (~["*", "/"])* ~["*"] "*")*  "/"> }
+
+TOKEN:
+{ <BOOLEAN: "boolean" >
+| <CLASS: "class" >
+| <ELSE:"else" >
+| <EXTENDS: "extends" >
+| <FALSE:"false" >
+| <IF: "if" >
+| <INT: "int" >
+| <LENGTH: "length" > 
+| <MAIN: "main" >
+| <NEW: "new" >
+| <PUBLIC: "public" >
+| <RETURN: "return" >
+| <STATIC: "static" > 
+| <THIS: "this" >
+| <TRUE: "true" >
+| <VOID: "void" >
+| <WHILE: "while" >
+| <STRING: "String" >
+| <SYSTEM_OUT_PRINTLN: "System.out.println" >
+
+| <STRING_LITERAL: "\"" (~["\""])* "\"" >
+	{ 
+		if (matchedToken.image.length() > 257)
+		throw new TokenMgrError("Lexical error at line "
+		+ matchedToken.beginLine + ", column "
+		+ matchedToken.beginColumn
+		+ ". String length over 255", 0);
+	}
+| <#DIGIT: ["0"-"9"]>
+| <#LETTER: ["A"-"Z"] | ["a"-"z"]>
+| <ID: <LETTER> (<LETTER> | <DIGIT>)*>
+	{ 
+		if (matchedToken.image.length() > 255)
+		throw new TokenMgrError("Lexical error at line "
+		+ matchedToken.beginLine + ", column "
+		+ matchedToken.beginColumn
+		+ ". Id length over 255", 0);
+	}
+
+| <NUM: (<DIGIT>)+>
+	{
+		try
+		{
+			//if (Integer.parseInt(matchedToken.toString()) > Integer.MAX_VALUE)
+			Integer.parseInt(matchedToken.toString());
+		}
+		catch( Exception e )
+		{
+			throw new TokenMgrError("Lexical error at line "
+			+ matchedToken.beginLine + ", column "
+			+ matchedToken.beginColumn
+			+ ". Integer over limit", 0);
+		}
+	}
+| <REAL: ((<DIGIT>)* "." (<DIGIT>)+) | ((<DIGIT>)+ "." (<DIGIT>)*)>
+	
+| <ASSIGN: "=" >
+| <PLUS: "+" >
+| <MINUS: "-" >
+| <MULT: "*" >
+| <DIV: "/" >
+| <AND: "&&" >
+| <OR: "||" >
+| <NOT: "!" >
+| <EQL: "==" >
+| <NOT_EQL: "!=" >
+| <LESS_THAN: "<" >
+| <GREATER_OR_EQL: "<=" >
+| <GRETER_THAN: ">" >
+| <GRETER_OR_EQL: ">=" >
+| <DELIMITER: ";" > 
+| <COMMA: "," >
+| <PERIOD: "." >
+| <LPAREN: "(" >
+| <RPAREN: ")" >
+| <L_SQUARE_BRACKET: "[" >
+| <R_SQUARE_BRACKET: "]" >
+| <L_CURLY_BRACKET: "{" >
+| <R_CURLY_BRACKET: "}" >
+}
+
+
+
+
+
+Program Program(): 
+{
+	ClassDeclList list1 = new ClassDeclList(); 
+	ClassDecl cl;
+}
+{ 
+	cl = ClassDecl() { list1.add(cl); } (cl = ClassDecl() { list1.add(cl);} )*  <EOF>
+	{return new Program(list1);}
+}
+
+
+ClassDecl ClassDecl(): 
+{
+	Id parentID = null, classID = null;
+	VarDeclList varList = new VarDeclList();
+	VarDecl var;
+	MethodDeclList methList = new MethodDeclList();
+	MethodDecl meth;
+}
+{
+	"class" classID = ID() [ "extends" parentID = ID() ] "{" ( var = VarDecl() {varList.add(var);})* ( meth = MethodDecl() {methList.add(meth);})* "}"
+	{return new ClassDecl(classID, parentID, varList, methList);}
+}
+
+Id ID():
+{
+	parser.Token idName = null;
+	Id token = null;;
+}
+{
+	idName = <ID> {token = new Id(idName.toString());}
+	{return token;}
+}
+
+MethodDecl MethodDecl(): 
+{
+	Type t = null;
+	Id name = null;
+	Id name2 = null;
+	FormalList form = null;
+	VarDeclList varList = new VarDeclList();
+	VarDecl var = null;
+	StmtList sList = new StmtList();
+	Stmt s = null;
+}
+{	
+	("public" ( (t = Type() | "void") name = ID() "(" [form = Formals()] ")" 
+	| "static" "void" "main" {name = new Id("main");}"(" "String" "[" "]" name2 = ID()/* {form.add( new Formal(new ObjType(new Id("String")), name2));}*/")") "{" (LOOKAHEAD(2)(var = VarDecl(){varList.add(var);}))* 
+	(LOOKAHEAD(2)(s = Statement(){ sList.add(s); }))* "}")
+	{return new MethodDecl(t, name, form, varList, sList);}
+}
+
+
+FormalList Formals(): 
+{
+	Type varType;
+	Id varName;
+	Formal form;
+	FormalList formList = new FormalList();
+
+}
+{
+
+	varType = Type() varName = ID(){formList.add(new Formal(varType, varName));} (LOOKAHEAD(2) ","  varType = Type() varName = ID(){formList.add(new Formal(varType, varName));})*
+	{return formList;}
+}
+
+VarDecl VarDecl(): 
+{
+	Type varType = null;
+	Id varName = null;
+	Exp expression = null;
+}
+{
+	varType = Type() varName = ID() [ "=" expression = FullExpr()] ";"
+	{return new VarDecl(varType, varName, expression);}
+}
+Type Type(): //still needs work
+{
+	Type varType = null;
+	Type arrayType = null;
+	Id objName = null;
+}
+{
+	(objName = ID() {varType = new ObjType(objName);} | varType = ElmType()) ["[" "]"{arrayType = new ArrayType(varType);}]
+	{return arrayType==null ? varType : arrayType;}
+}
+
+Type ElmType(): 
+{
+	Type t;
+}
+{
+	(  "boolean"{t = new BoolType();} 
+	| "int" {t = new IntType();})
+	
+	{return t;}
+}
+//********************************
+Stmt Statement(): 
+{
+	Block codeBlock = null;
+	Stmt stmtList = null;
+	StmtList list = new StmtList();
+	Exp e = null;
+	Exp e2 = null;
+	ExpList eList = null;
+	Stmt statement = null;
+	Stmt statement2 = null;
+	boolean methodCall = false;
+	
+}
+{
+	
+	("{" (statement= Statement(){ 
+		list.add(statement);})* "}" {codeBlock = new Block(list);} 
+	|  e = Lvalue() ("=" e2 = FullExpr() | "(" [ eList = Args() ] ")" { methodCall = true;}) ";" 
+	{
+		if(e2!=null)
+		{
+			statement = new Assign(e, e2);
+			return statement;
+		}
+		else if(methodCall == true)
+		{
+			if(eList == null)
+				eList = new ExpList();
+			if( e instanceof ast.Member)
+				statement = new CallStmt(((Member)e).obj, ((Member)e).var, eList);
+			else if( e instanceof ast.Id)
+				statement = new CallStmt((Exp)new This(), (Id)e, eList);
+
+			return statement;
+		}
+		
+	}
+	|  "if" "(" e = Expr() ")" statement = Statement() [LOOKAHEAD(2)("else" statement2 = Statement())] {statement = new If(e, statement, statement2);}
+	|  "while" "(" e = Expr() ")" statement = Statement() {statement = new While(e, statement);}
+	|  "System.out.println" "(" [ e = Expr() | e = String_Literal() ] {statement = new Print(e);}  ")" ";" 
+	|  "return" [e = Expr()] ";" {statement = new Return(e);})
+	
+	{
+		if(codeBlock != null)
+	 	{	
+			return codeBlock;
+	 	}
+		else  if( statement != null)
+			return statement;
+	}
+}
+
+Stmt MethodCall(): 
+{
+	Exp e = null;
+	ExpList eList = null;
+	Stmt statement = null;
+	boolean method = false;
+}
+{
+	(e = Expr() ["(" eList = Args() ")" {method = true;} ])
+	{   	
+		if(method = false)
+			statement = new Print(e);
+		else
+			statement = new Print(new Call( ((Member) e).obj, ((Member) e).var, eList)); 
+		return statement;
+	}
+}	
+Text String_Literal(): 
+{
+	parser.Token str = null;
+	Text t = null;
+}
+{
+	str = <STRING_LITERAL> {t = new Text(str.toString());}
+	{return t;}
+}
+
+ExpList Args(): 
+{
+	Exp expression;
+	ExpList eList = new ExpList();
+}
+{
+	expression  = Expr(){eList.add(expression);} ( "," expression = Expr(){eList.add(expression);} )*
+	{return eList;}
+}
+//**********************************************
+Exp FullExpr(): 
+{
+	Int num = null;
+	Type t = null;
+	NewArray array = null;
+	Exp e = null;
+	Id objName = null;
+	ExpList eList = null;
+	NewObj obj = null;
+}
+{
+	("new" ( t = ElmType() "[" num = NUM() "]" {array = new NewArray(t, num);} 
+	| objName = ID() 
+		( "[" num = NUM() "]" {array = new NewArray(new ObjType(objName), num);}
+		| "(" [ eList = Args() ] ")" {obj = new NewObj(objName, eList);} ))
+	| e = Expr())
+	{if(array != null)		
+		return array;
+	else if(obj != null)
+		return obj;
+	else if( e != null)
+		return e;
+	else
+		return null;}
+}
+
+
+Exp Expr(): 
+{
+	Exp e1 = null, e2 = null;
+}
+{
+	e1 = AndExpr() e2 = OrTail(e1)
+	{return (e2 == null) ? e1:e2;}
+}
+
+Exp OrTail(Exp e0): 
+{
+	Exp e1 = null, e2 = null;
+}
+{
+	["||" e1 = AndExpr(){e1 = new Binop(Binop.OR,e0,e1);} e2 = OrTail(e1)]
+	{return (e2 == null) ? e1:e2;}
+
+}
+
+Exp AndExpr():
+{
+	Exp e1 = null, e2 = null;
+}
+{
+	e1 = RelExpr() e2 = AndTail(e1)
+	{return (e2 == null) ? e1:e2;}
+}
+
+Exp AndTail(Exp e0):
+{
+	Exp e1 = null, e2 = null;
+}
+{
+	["&&" e1 = RelExpr() {e1 = new Binop(Binop.AND, e0,e1); } e2 = AndTail(e1)]
+	{return (e2 == null) ? e1:e2;}
+}
+
+Exp RelExpr():
+{
+	Exp e1 = null, e2 = null;
+	Relop rel = null;
+}
+{
+	e1 = ArithExpr() [rel = RelOp() e2 = ArithExpr()] 
+	{if(rel != null)
+		if(e1 != null)
+			rel.e1 = e1;
+		if(e2 != null)
+			rel.e2 = e2;
+	}
+	{/*System.out.println("RelExpr");*/return (e2 != null) ? rel:e1;}
+}
+
+Exp ArithExpr():
+{
+	Exp e1 = null, e2 = null;
+}
+{
+	e1 = Term() e2 = ArithTail(e1)
+	{/*System.out.println("ArithExpr");*/return (e2 == null) ? e1:e2;}
+
+}
+
+Exp ArithTail(Exp e0):
+{
+	Exp e1 = null, e2 = null;
+	int add = Binop.ADD;
+}
+{
+	[("+" | "-" { add = Binop.SUB;}) 
+	e1 = Term()  { e1 = new Binop(add, e0, e1);} 
+	e2 =  ArithTail(e1)]
+	{return (e2 == null) ? e1:e2;}
+
+}
+
+Exp Term():
+{
+	Exp e1 = null, e2 = null;
+}
+{
+	e1 = Factor() e2 = TermTail(e1)
+	{return (e2 == null) ? e1:e2;}
+}
+
+Exp TermTail(Exp e0):
+{
+	Exp e1 = null, e2 = null;
+	int mult = Binop.MUL;
+}
+{
+	[("*" | "/" { mult = Binop.DIV;}) 
+	e1 = Factor()  { e1 = new Binop(mult, e0, e1);} 
+	e2 =  TermTail(e1)]
+	{return (e2 == null) ? e1:e2;}
+}
+
+Exp Factor (): 
+{
+	Exp e1 = null, e2 = null;
+	boolean NEG = true;
+	ArrayLen al = null;
+	Call function = null;
+	ExpList eList = null;
+	This thisPointer = null;
+}
+{
+	(("-" | "!"{NEG = false;}) e1 = Factor(){if(NEG == true) e1 = new Neg(e1); else e1 = new Not(e1);}
+	| e1 = Lvalue() ["." "length" "(" ")" {al = new ArrayLen(e1);} | "(" [eList = Args()] 
+	{
+		if(e1 instanceof ast.Member)
+			function = new Call(((Member)e1).obj, ((Member)e1).var, eList);
+		
+		else if(e1 instanceof ast.Id)
+			function = new Call((Exp)( new This()),(Id) e1, eList);
+		
+	} ")" ]
+	| "(" e1 = Expr() ")"
+	| e1 = Literal())
+	{
+		if(function != null)
+			return function;
+		else if(al != null)
+			return al;		
+		else
+			return e1;
+	}
+}
+
+Exp Lvalue(): 
+{
+	This thisPointer = null;
+	Member mem = null;
+	Id memberName = null;
+	Id innerMemberName = null;
+	ArrayElm element = null;
+	Exp indexExpr = null;
+	Exp retVal = null;
+}
+{
+	
+	["this" "." {thisPointer = new This();}] 
+	memberName = ID() 
+	{ if(thisPointer != null)  
+		retVal = new Member(thisPointer, memberName); 
+	  else	
+	  	retVal = memberName;
+	}  
+	(LOOKAHEAD(2)("[" indexExpr = Expr() "]" {retVal = new ArrayElm(memberName, indexExpr);} 
+	| "." innerMemberName = ID()	{ indexExpr = null; retVal = new Member(memberName, innerMemberName); } ))*
+	
+	{return retVal;} 
+}
+
+Exp Literal():
+{
+	Int i = null;
+	Bool b = null;
+}
+{
+	
+	(i = NUM() | "true" {b = new Bool(1);} | "false" {b = new Bool(0);})
+	{return (i!=null) ? i:b;}
+}
+
+Int NUM(): 
+{
+	parser.Token num = null;
+	Int i = null;
+}
+
+{
+	num = <NUM> {i = new Int(Integer.parseInt(num.toString())); }
+	{return i;}
+}
+
+Relop RelOp():
+{
+	Relop rel = null;
+}
+{
+	("=="{rel = new Relop(Relop.EQ, null, null);} 
+	| "!=" {rel = new Relop(Relop.NE, null, null);}
+	| "<" {rel = new Relop(Relop.LT, null, null);}
+	| "<=" {rel = new Relop(Relop.LE, null, null);}
+	| ">" {rel = new Relop(Relop.GT, null, null);}
+	| ">=" {rel = new Relop(Relop.GE, null, null);})
+	{return rel;}
+}
+
+

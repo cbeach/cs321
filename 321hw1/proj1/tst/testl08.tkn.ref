@@ -1,0 +1,20 @@
+Code Token-image
+----------------
+[40] /
+[39] *
+[52] This
+[52] comment
+[39] *
+[35] .
+[35] .
+[35] .
+[52] continues
+[52] here
+[33] ,
+[52] but
+[52] is
+[52] missing
+[52] the
+[52] end
+[0] 
+Lexical analysis successful, total 17 tokens

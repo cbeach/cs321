@@ -1,0 +1,6 @@
+Symbol Table:
+Class Body (pid=null):
+Class test (pid=null):
+ <method> test.main (rtype=void, paramCnt=0, localCnt=1):
+  [local] (1) b Body
+

@@ -1,0 +1,10 @@
+(Program (ClassDeclList
+ (ClassDecl (Id test) (NullExp) 
+ (VarDeclList ) 
+ (MethodDeclList
+ (MethodDecl (NullType) (Id main) (FormalList ) (VarDeclList (VarDecl (IntType) (Id i) (Int 0) ) ) (StmtList 
+ (If (Relop > (Int 2) (Int 1) ) 
+ (If (Relop > (Int 1) (Int 0) ) 
+ (Assign (Id i) (Int 1) ) 
+ (Assign (Id i) (Int 2) ) ) (NullStmt) ) 
+ (Print (Id i) ) ) ) ) ) ) )

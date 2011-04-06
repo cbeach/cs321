@@ -1,0 +1,1 @@
+typechk.TypeException: Operands in logical op must be booleans: int&&boolean

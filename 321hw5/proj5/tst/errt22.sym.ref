@@ -1,0 +1,12 @@
+Symbol Table:
+Class A (pid=null):
+Class typeErr (pid=null):
+ <method> typeErr.main (rtype=void, paramCnt=0, localCnt=4):
+  [local] (1) a A
+  [local] (2) b B
+  [local] (3) c C
+  [local] (4) d D
+Class D (pid=A):
+Class C (pid=B):
+Class B (pid=A):
+

@@ -1,0 +1,8 @@
+Symbol Table:
+Class typeErr (pid=null):
+ <method> typeErr.main (rtype=void, paramCnt=0, localCnt=2):
+  [local] (1) a int[]
+  [local] (2) x int
+ <method> typeErr.f (rtype=int, paramCnt=1, localCnt=0):
+  [param] (1) i int
+

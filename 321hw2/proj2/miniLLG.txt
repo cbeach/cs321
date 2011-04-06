@@ -1,0 +1,73 @@
+Casey Beach
+CS 321 Project 2
+
+
+Program -> ClassDecl (ClassDecl)*
+
+ClassDecl -> "class" <ID> ["extends" <ID>] "{" (VarDecl)* (MethodDecl)* "}"
+
+VarDecl -> Type <ID> [ "=" FullExpr] ";"
+
+MethodDecl ->		"public" MethodDeclTail
+MethodDeclTail -> 	  Type <ID> "(" [Formals] ")" "{" (VarDecl)* (Statement)* "}"
+		 	  "void" <ID> "(" [Formals] ")" "{" (VarDecl)* (Statement)* "}"
+			  "static" "void" "main" "(" String "[""]" <ID> ")" "{" (VarDecl)* (Statement)* "}"
+
+Formals -> Type <ID> ("," Type <ID> )*
+
+Type -> ElmType ["[""]"]
+
+ElmType -> "boolean" | "int" | <ID>
+
+Statement -> 	"{"([Statement])* "}" 
+		| Lvalue StatementLvalueTail
+		|"if" "(" Expr ")" Statement [ "else" ] Statement]
+		| "while" "(" Expr ")" Statement
+		| "System.out.println" "(" [Expr | <STRING_LITERAL>] ")" ";"
+		| "return" [ Expr ] ";"
+
+StatementLvalueTail ->    "=" FullExpr ";"
+			| "(" [Args] ")" ";"
+
+Args -> Expr ( "," Expr)*
+	
+FulExpr -> "new" FullExprNewTail
+	   | Expr
+
+FullExprNewTail -> <ID> "(" [ ARGS ] ")"
+		   | ElmType "[" <NUM> "]"
+
+Expr ->  "(" Expr ")"
+	 | Lvalue ExprLvalueTail
+	 | Neg Expr
+	 | OrExpr (Expr)*
+
+OrExpr -> AndExpr (OrExpr)*
+OrExprP -> <OR> AndExpr (OrExprP)*
+AndExpr -> CompExpr (AndExpr)*
+AndExprP -> <AND> CompExpr (AndExprP)*
+CompExpr -> AddExpr (CompExprP)*
+CompExprP -> <COMP> AddExpr (CompExprP)*
+AddExpr -> MultExpr (AddExprP)*
+AddExprP -> <ADD> MultExpr (AddExprP)*
+MultExpr -> Literal [MultExprP]
+	    Lvalue [MultExprP]
+MultExprP -> Mult (Literal | Lvalue) (MultExprP)*
+
+ExprLvalueTail -> "(" [Args] ")"
+		  | "." "length" "(" ")"
+
+Lvalue -> [ "this" "." ] <ID> [Deref]
+
+Deref -> "[" Expr "]" | "." <ID>
+
+Literal -> <NUM> | "true | "false"
+
+Neg -> "-" | "!"
+Mult -> "*" | "/"
+Add -> "+" | "-"
+Comp -> "==" | "!=" | "<" | ">" | ">=" | "<="
+And -> "&&"
+Or -> "||"
+
+
